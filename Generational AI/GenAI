@@ -68,8 +68,8 @@ def main():
     desiredString = file.read().replace("\n", " ")
     file.close()
     #mutation rate
-    mutationPercentage = 99
-    mutationRate = .99
+    mutationPercentage = 10
+    mutationRate = .10
     #pop size
     popSize = 2
     #parents and parent fitness keeper
