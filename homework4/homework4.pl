@@ -167,5 +167,45 @@ as necessary. You may alter the predicates
 I have provided for testing alternate maps
 but note that I will use my own. For
 grading */
+
+/* cleaning up */
+cleanup() :-
+	retractall(has(A))
+	retractall(location(B))
+	retractall(contains(C,D))
+
+/* Trying to find the path to walk down */
+is_Move(X,Y) :- edge(X,Y)
+
+is_Move(X,Y) :- edge(X,Z)
+				 is_Move(Z,Y)
+
+/* I need a function to move to an item and grab it */
+findAndMoveToPath(X) :-
+	contains(Y,X)
+	moveTo(Y)
+	take(X)
+
+/* I need to have a move to function */
+moveTo(Y) :-
+	move(is_Move(location(X),Y))
+	location(Y) -> break; moveTo(Y)
+
+play() :-
+	has(message) -> (
+		has(code) -> (
+			has(key) -> (
+				location(gate) -> 
+					break;
+					moveTo(X,gate)
+				);
+				findAndMoveToPath(key)
+				play()
+			);
+			findAndMoveToPath(code)
+			play()
+		);
+		findAndMoveToPath(message)
+		play()
 play().
 
