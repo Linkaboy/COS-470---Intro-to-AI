@@ -192,20 +192,24 @@ moveTo(Y) :-
 	location(Y) -> break; moveTo(Y)
 
 play() :-
-	has(message) -> (
-		has(code) -> (
-			has(key) -> (
-				location(gate) -> 
-					break;
-					moveTo(X,gate)
-				);
-				findAndMoveToPath(key)
-				play()
+	has(message) 
+	-> (
+		has(code) 
+		-> (
+			has(key) 
+			-> 
+			(location(gate) 
+				-> 
+				break;
+				moveTo(X,gate)
 			);
-			findAndMoveToPath(code)
+			findAndMoveToPath(key)
 			play()
 		);
-		findAndMoveToPath(message)
+		findAndMoveToPath(code)
 		play()
+	);
+	findAndMoveToPath(message)
+	play()
 play().
 
