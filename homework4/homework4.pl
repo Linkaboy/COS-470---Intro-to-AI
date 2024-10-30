@@ -186,8 +186,8 @@ findAndMoveToPath(X) :-
 
 /* I need to have a move to function */
 moveTo(Y) :-
-	(location(X), is_move(X,Y) -> 
-		retract(location(X)), assertz(location(Y)).
+	(location(X), is_Move(X,Y) -> 
+		retract(location(X)), assertz(location(Y))
 		; moveTo(Y)).
 
 play() :-
@@ -196,15 +196,15 @@ play() :-
 		-> (has(key) 
 			-> (location(gate) 
 				-> 
-				true.
-				; moveTo(X,gate).
-			).
+				true
+				; moveTo(X,gate)
+			)
 			; findAndMoveToPath(key),
-			play().
-		).
+			play()
+		)
 		; findAndMoveToPath(code),
-		play().
-	).
+		play()
+	)
 	; findAndMoveToPath(message),
 	play()).
 play().
