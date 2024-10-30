@@ -179,42 +179,30 @@ canmove(X) :-
 cleanup() :-
 	retractall(has(_)),
 	retractall(location(_)),
-	retractall(contains(_,_)).
+	retractall(contains(_, _)).
 
 /* Trying to find the path to walk down */
-is_Move(X,Y) :- edge(X,Y).
-is_Move(X,Y) :- edge(X,Z), is_Move(Z,Y).
+is_Move(X, Y) :- edge(X, Y).
+is_Move(X, Y) :- edge(X, Z), is_Move(Z, Y).
 
 /* I need a function to move to an item and grab it */
 findAndMoveToPath(X) :-
-	contains(Y,X),
+	contains(Y, X),
 	moveTo(Y),
 	take(X).
 
 /* I need to have a move to function */
 moveTo(Y) :-
-	move(Y) ->
-		true 
-		; move(is_Move(X,Y)),
-		moveTo(Y).
+	location(X),
+	(X = Y) -> true
+	; is_Move(X, Y), move(Z), moveTo(Y).
 
 
 play() :-
-	(has(message) 
-	-> (has(code) 
-		-> (has(key) 
-			-> (location(gate) 
-				-> 
-				true
-				; moveTo(X,gate)
-			)
-			; findAndMoveToPath(key),
-			play()
-		)
-		; findAndMoveToPath(code),
-		play()
-	)
-	; findAndMoveToPath(message),
-	play()).
+	findAndMoveToPath(message),
+	findAndMoveToPath(code),
+	findAndMoveToPath(key),
+	moveTo(gate),
+	win.
 play().
 
