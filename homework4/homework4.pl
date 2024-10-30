@@ -168,6 +168,13 @@ I have provided for testing alternate maps
 but note that I will use my own. For
 grading */
 
+/* Need a canmove(X) function*/
+canmove(X) :-
+	location(Y),
+	edge(X,Y) ->
+	true
+	; false.
+
 /* cleaning up */
 cleanup() :-
 	retractall(has(_)),
@@ -186,9 +193,11 @@ findAndMoveToPath(X) :-
 
 /* I need to have a move to function */
 moveTo(Y) :-
-	(location(X), is_Move(X,Y) -> 
-		retract(location(X)), assertz(location(Y))
-		; moveTo(Y)).
+	move(Y) ->
+		true 
+		; move(is_Move(X,Y)),
+		moveTo(Y).
+
 
 play() :-
 	(has(message) 
