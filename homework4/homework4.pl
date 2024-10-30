@@ -199,13 +199,13 @@ play() :-
 				break;
 				moveTo(X,gate)
 			);
-			findAndMoveToPath(key)
+			findAndMoveToPath(key),
 			play()
 		);
-		findAndMoveToPath(code)
+		findAndMoveToPath(code),
 		play()
 	);
-	findAndMoveToPath(message)
+	findAndMoveToPath(message),
 	play()).
 play().
 
