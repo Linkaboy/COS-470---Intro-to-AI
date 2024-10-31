@@ -206,8 +206,8 @@ movePath(X, Y, [Path], Temp) :-
 
 movePath(X, Y, [Path], Temp) :-
 	edge(X, Bet), 
-	\+ member(Bet, Path), 
-	movePath(Bet, Y, [Bet | Path], Temp).
+	append_list(Path, [Bet], NewPath), 
+	movePath(Bet, Y, [NewPath], Temp).
 
 play :-
 	findAndMoveToPath(message),
