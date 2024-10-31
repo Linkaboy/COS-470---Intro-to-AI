@@ -73,14 +73,15 @@ location(kitchen).
 your game using play/0, I should be able to type:
 win(), and prolog responds: true.
 */
-win() :-
+win :-
     (
 	has(message),
 	has(code),
 	has(key),
 	location(gate)
     )
-    -> format('You are free of the spooky mansion.~n').
+    -> true, format('~46t', 'You are free of the spooky mansion.~n')
+    ; false.
 
 /* You may only use this predicate
 to move the player between locations.
@@ -176,7 +177,7 @@ canmove(X) :-
 	; false.
 
 /* cleaning up */
-cleanup() :-
+cleanup :-
 	retractall(has(_)),
 	retractall(location(_)),
 	retractall(contains(_, _)).
@@ -195,14 +196,14 @@ findAndMoveToPath(X) :-
 moveTo(Y) :-
 	location(X),
 	(X = Y) -> true
-	; is_Move(X, Y), move(Z), moveTo(Y).
+	; is_Move(X, Z), move(Z), moveTo(Y).
 
 
-play() :-
+play :-
 	findAndMoveToPath(message),
 	findAndMoveToPath(code),
 	findAndMoveToPath(key),
 	moveTo(gate),
 	win.
-play().
-
+:- initialization(play/0).
+?- win.
