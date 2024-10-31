@@ -172,7 +172,7 @@ grading */
 /* Need a canmove(X) function*/
 canmove(X) :-
 	location(Y),
-	edge(X,Y) ->
+	edge(Y,X) ->
 	true
 	; false.
 
@@ -183,8 +183,8 @@ cleanup :-
 	retractall(contains(_, _)).
 
 /* Trying to find the path to walk down */
-is_Move(X, Y) :- edge(X, Y).
-is_Move(X, Y) :- edge(X, Z), is_Move(Z, Y).
+is_Move(Y) :- location(X), edge(X, Y) -> true
+				; location(X), edge(X, Z), is_move(Y).
 
 /* I need a function to move to an item and grab it */
 findAndMoveToPath(X) :-
@@ -193,11 +193,14 @@ findAndMoveToPath(X) :-
 	take(X).
 
 /* I need to have a move to function */
-moveTo(Y) :-
+/*moveTo(Y) :-
 	location(X),
 	(X = Y) -> true
-	; is_Move(X, Z), move(Z), moveTo(Y).
-
+	; location(X), edge(X, Z), move(Z), is_Move(Y), moveTo(Y).
+*/
+moveTo(X, Y, [Path], Temp) :-
+	X=Y -> reverse(Path, Temp) 
+	; edge(X, Bet), \+ member(Bet, Path), moveTo(Bet, Y, [Path]).
 
 play :-
 	findAndMoveToPath(message),
