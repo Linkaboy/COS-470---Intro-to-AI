@@ -198,9 +198,12 @@ findAndMoveToPath(X) :-
 	(X = Y) -> true
 	; location(X), edge(X, Z), move(Z), is_Move(Y), moveTo(Y).
 */
-moveTo(X, Y, [Path], Temp) :-
+moveTo(X, Y, Temp) :-
+	movePath(X, Y, [Path], Temp).
+
+movePath(X, Y, [Path], Temp) :-
 	X=Y -> reverse(Path, Temp) 
-	; edge(X, Bet), \+ member(Bet, Path), moveTo(Bet, Y, [Path]).
+	; edge(X, Bet), \+ member(Bet, Path), movePath(Bet, Y, [Path], Temp).
 
 play :-
 	findAndMoveToPath(message),
