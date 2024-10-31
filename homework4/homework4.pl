@@ -204,6 +204,5 @@ play :-
 	findAndMoveToPath(code),
 	findAndMoveToPath(key),
 	moveTo(gate),
-	win.
-:- initialization(play/0).
-?- win.
+	win,
+	write('Finished Function').
