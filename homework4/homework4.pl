@@ -189,28 +189,39 @@ is_Move(Y) :- location(X), edge(X, Y) -> true
 /* I need a function to move to an item and grab it */
 findAndMoveToPath(X) :-
 	contains(Y, X),
-	moveTo(Y),
+	location(Z),
+	movePathInitial(Y, Z, PathList),
+	moveTo(PathList),
+	move(Y),
 	take(X).
 
 /* I need to have a move to function */
-/*moveTo(Y) :-
-	location(X),
-	(X = Y) -> true
-	; location(X), edge(X, Z), move(Z), is_Move(Y), moveTo(Y).
-*/
-moveTo(X, Y, Temp) :-
+
+moveTo(Temp) :-
+	Temp = [X | NewTemp],
+	move(X),
+	moveTo(NewTemp).
+
+movePathInitial(X, Y, Temp) :-
 	movePath(X, Y, [Path], Temp).
 
 movePath(Y, Y, [Path], Temp) :-
 	reverse(Path, Temp). 
 
-movePath(X, Y, [Path], Temp) :-
-	edge(X, Bet), 
-	append(Path, [Bet], Path), 
-	movePath(Bet, Y, [Path], Temp).
-
-/*need a list adder*/
-addToList(Value, List, [Value | List]).
+movePath(X, Y, [Path], Temp) :- 
+	/* i need conditions of the desired path is an edge*/
+	edge(X, Y) ->
+	append(Path, [Y], NewPath),
+	movePath(Y, Y, [NewPath], Temp)
+	; edge(Y, X) ->
+		append(Path, [Y], NewPath),
+		movePath(Y, Y, [NewPath], Temp)
+		; edge(X, After) ->
+			append(Path, [After], NewPath), 
+			movePath(After, Y, [NewPath], Temp)
+			; edge(Before, X) ->
+				append(Path, [Before], NewPath),
+				movePath(Before, Y, [NewPath], Temp).
 
 play :-
 	findAndMoveToPath(message),
