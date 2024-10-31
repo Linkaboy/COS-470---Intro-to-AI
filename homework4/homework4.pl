@@ -201,12 +201,12 @@ findAndMoveToPath(X) :-
 moveTo(X, Y, Temp) :-
 	movePath(X, Y, [Path], Temp).
 
-movePath(X, Y, [Path], Temp) :-
+movePath(Y, Y, [Path], Temp) :-
 	reverse(Path, Temp). 
 
 movePath(X, Y, [Path], Temp) :-
 	edge(X, Bet), 
-	append(Path, Bet, Path), 
+	append(Path, [Bet], Path), 
 	movePath(Bet, Y, [Path], Temp).
 
 /*need a list adder*/
