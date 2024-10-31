@@ -202,9 +202,9 @@ moveTo(X, Y, Temp) :-
 	movePath(X, Y, [Path], Temp).
 
 movePath(X, Y, [Path], Temp) :-
-	(X==Y) -> reverse(Path, Temp). 
+	reverse(Path, Temp). 
 
-movePath(X, Y, [Path], Temp)
+movePath(X, Y, [Path], Temp) :-
 	edge(X, Bet), 
 	\+ member(Bet, Path), 
 	movePath(Bet, Y, [Bet | Path], Temp).
