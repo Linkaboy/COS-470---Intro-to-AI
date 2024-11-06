@@ -174,7 +174,10 @@ canmove(X) :-
 	location(Y),
 	edge(Y,X) ->
 	true
-	; false.
+	; location(Y),
+		edge(X,Y) -> 
+		true 
+		; false.
 
 /* cleaning up */
 cleanup :-
@@ -191,15 +194,20 @@ findAndMoveToPath(X) :-
 	contains(Y, X),
 	location(Z),
 	movePathInitial(Y, Z, PathList),
-	moveTo(PathList),
+	initialMove(PathList),
 	move(Y),
 	take(X).
 
 /* I need to have a move to function */
 
+initialMove(Temp) :-
+	moveTo([NewTemp]).
+
+moveTo([]) :- true.
 moveTo(Temp) :-
-	Temp = [X | NewTemp],
-	move(X),
+	first_element(Temp, Head),
+	move(Head),
+	remove_head(Temp, NewTemp),
 	moveTo(NewTemp).
 
 movePathInitial(X, Y, Temp) :-
@@ -210,7 +218,8 @@ movePath(Y, Y, [Path], Temp) :-
 
 movePath(X, Y, [Path], Temp) :- 
 	/* i need conditions of the desired path is an edge*/
-	edge(X, Y) ->
+	/* i need to add a visited feature */
+	edge(X, Y)  ->
 	append(Path, [Y], NewPath),
 	movePath(Y, Y, [NewPath], Temp)
 	; edge(Y, X) ->
@@ -227,6 +236,11 @@ play :-
 	findAndMoveToPath(message),
 	findAndMoveToPath(code),
 	findAndMoveToPath(key),
-	moveTo(gate),
+	movePathInitial(location(X), gate, PathList),
+	initialMove(PathList),
+	move(gate),
 	win,
 	write('Finished Function').
+
+first_element([Head|_], Head).
+remove_head([_|Tail], Tail).
