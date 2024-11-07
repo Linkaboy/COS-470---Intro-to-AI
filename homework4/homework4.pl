@@ -195,13 +195,14 @@ findAndMoveToPath(X) :-
 	location(Z),
 	movePathInitial(Y, Z, PathList),
 	initialMove(PathList),
-	move(Y),
 	take(X).
 
+first_element([Head|_], Head).
+remove_head([_|Tail], Tail).
 /* I need to have a move to function */
 
 initialMove(Temp) :-
-	moveTo([NewTemp]).
+	moveTo(Temp).
 
 moveTo([]) :- true.
 moveTo(Temp) :-
@@ -220,27 +221,24 @@ movePath(X, Y, [Path], Temp) :-
 	/* i need conditions of the desired path is an edge*/
 	/* i need to add a visited feature */
 	edge(X, Y)  ->
-	append(Path, [Y], NewPath),
+	append(Path, [X], NewPath),
 	movePath(Y, Y, [NewPath], Temp)
 	; edge(Y, X) ->
-		append(Path, [Y], NewPath),
+		append(Path, [X], NewPath),
 		movePath(Y, Y, [NewPath], Temp)
 		; edge(X, After) ->
-			append(Path, [After], NewPath), 
+			append(Path, [X], NewPath), 
 			movePath(After, Y, [NewPath], Temp)
 			; edge(Before, X) ->
-				append(Path, [Before], NewPath),
+				append(Path, [X], NewPath),
 				movePath(Before, Y, [NewPath], Temp).
 
 play :-
 	findAndMoveToPath(message),
 	findAndMoveToPath(code),
 	findAndMoveToPath(key),
-	movePathInitial(location(X), gate, PathList),
-	initialMove(PathList),
+	movePathInitial(X, gate, PathList),
+	reverse(PathList, Path),
+	initialMove(Path),
 	move(gate),
-	win,
 	write('Finished Function').
-
-first_element([Head|_], Head).
-remove_head([_|Tail], Tail).
